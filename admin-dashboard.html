@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Smart Curriculum System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --dark-blue: #1e40af;
+            --light-blue: #dbeafe;
+            --govt-gold: #d97706;
+            --white: #ffffff;
+            --gray-light: #f8fafc;
+            --gray-border: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
+        .govt-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        /* Translation Controls */
+        .translation-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .translation-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .translation-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .translation-btn.active {
+            background: white;
+            color: var(--primary-blue);
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: flex;
+            min-height: calc(100vh - 150px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            padding: 20px 0;
+        }
+
+        .user-info {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--gray-border);
+            margin-bottom: 15px;
+        }
+
+        .user-info h3 {
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover {
+            background: var(--light-blue);
+        }
+
+        .nav-item.active {
+            background: var(--light-blue);
+            border-right: 3px solid var(--primary-blue);
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-header h2 {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 4px solid var(--primary-blue);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .section-header h3 {
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-blue);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .data-table th {
+            background: var(--gray-light);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--gray-border);
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.1);
+        }
+
+        /* Timetable */
+        .timetable {
+            display: grid;
+            grid-template-columns: 100px repeat(5, 1fr);
+            gap: 1px;
+            background: var(--gray-border);
+            border: 1px solid var(--gray-border);
+        }
+
+        .timetable-header {
+            background: var(--primary-blue);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .timetable-cell {
+            background: white;
+            padding: 10px;
+            min-height: 80px;
+        }
+
+        .timetable-slot {
+            background: var(--light-blue);
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
+
+        .timetable-time {
+            background: var(--gray-light);
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .govt-footer {
+            background: var(--primary-blue);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            font-size: 0.85rem;
+        }
+
+        .footer-content p {
+            margin-bottom: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 10px 0;
+            }
+            
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-item {
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .translation-controls {
+                justify-content: center;
+            }
+            
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .timetable {
+                grid-template-columns: 80px repeat(5, 1fr);
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .timetable {
+                grid-template-columns: 60px repeat(5, 1fr);
+                font-size: 0.7rem;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Government Header -->
+    <header class="govt-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1 id="header-title">Smart Curriculum System</h1>
+                        <p id="header-subtitle">Government of Punjab - School Education</p>
+                    </div>
+                </div>
+                <div class="translation-controls">
+                    <button class="translation-btn active" onclick="changeLanguage('en')">English</button>
+                    <button class="translation-btn" onclick="changeLanguage('pa')">ਪੰਜਾਬੀ</button>
+                    <button class="translation-btn" onclick="changeLanguage('hi')">हिन्दी</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="user-info">
+                <h3 id="admin-name">Administrator</h3>
+                <p id="admin-role">System Administrator</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="showSection('overview')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span id="nav-overview">Dashboard Overview</span>
+                </li>
+                <li class="nav-item" onclick="showSection('timetable')">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="nav-timetable">Timetable Management</span>
+                </li>
+                <li class="nav-item" onclick="showSection('teachers')">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span id="nav-teachers">Teacher Management</span>
+                </li>
+                <li class="nav-item" onclick="showSection('students')">
+                    <i class="fas fa-user-graduate"></i>
+                    <span id="nav-students">Student Admission</span>
+                </li>
+                <li class="nav-item" onclick="showSection('assignments')">
+                    <i class="fas fa-tasks"></i>
+                    <span id="nav-assignments">Teacher Assignments</span>
+                </li>
+                <li class="nav-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span id="nav-logout">Logout</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h2 id="dashboard-title">Admin Dashboard</h2>
+                <div id="current-date">Loading date...</div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-number">1,250</div>
+                    <div class="stat-label" id="stat-students">Total Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">42</div>
+                    <div class="stat-label" id="stat-teachers">Teaching Staff</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">35</div>
+                    <div class="stat-label" id="stat-classes">Active Classes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">94%</div>
+                    <div class="stat-label" id="stat-attendance">Average Attendance</div>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="overview" class="content-section active">
+                <div class="section-header">
+                    <h3 id="overview-title">System Overview</h3>
+                    <button class="btn btn-primary" onclick="generateReport()">
+                        <i class="fas fa-download"></i> <span id="btn-report">Generate Report</span>
+                    </button>
+                </div>
+                <p id="overview-desc">Welcome to the Smart Curriculum System admin dashboard. Here you can manage all aspects of the educational system.</p>
+                
+                <div class="quick-actions">
+                    <h4 id="quick-actions-title">Quick Actions</h4>
+                    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="showSection('timetable')">
+                            <i class="fas fa-plus"></i> <span id="btn-new-timetable">Create New Timetable</span>
+                        </button>
+                        <button class="btn btn-success" onclick="showSection('teachers')">
+                            <i class="fas fa-user-plus"></i> <span id="btn-new-teacher">Add New Teacher</span>
+                        </button>
+                        <button class="btn btn-warning" onclick="showSection('students')">
+                            <i class="fas fa-user-graduate"></i> <span id="btn-new-student">Admit New Student</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timetable Management Section -->
+<div id="timetable" class="content-section">
+    <div class="section-header">
+        <h3 id="timetable-title">Timetable Management</h3>
+        <div>
+            <select id="classSelector" class="form-input" style="width: 200px; margin-right: 10px;" onchange="loadClassTimetable()">
+                <option value="">Select Class</option>
+                <option value="10A">Class 10-A</option>
+                <option value="10B">Class 10-B</option>
+                <option value="11A">Class 11-A</option>
+                <option value="11B">Class 11-B</option>
+                <option value="12A">Class 12-A</option>
+            </select>
+            <button class="btn btn-primary" onclick="openTimetableModal()">
+                <i class="fas fa-plus"></i> <span id="btn-add-slot">Add/Edit Time Slot</span>
+            </button>
+            <button class="btn btn-success" onclick="generateTimetablePDF()">
+                <i class="fas fa-print"></i> <span id="btn-print-timetable">Print Timetable</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Class Information -->
+    <div id="classInfo" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+        <h4 id="classInfoTitle">Class Information</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div>
+                <strong id="label-class-name">Class:</strong> 
+                <span id="currentClassName">-</span>
+            </div>
+            <div>
+                <strong id="label-room">Room:</strong> 
+                <span id="currentClassRoom">-</span>
+            </div>
+            <div>
+                <strong id="label-teacher">Class Teacher:</strong> 
+                <span id="currentClassTeacher">-</span>
+            </div>
+            <div>
+                <strong id="label-periods">Total Periods:</strong> 
+                <span id="currentClassPeriods">-</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Timetable Display -->
+    <div id="timetableContainer">
+        <div id="noClassSelected" style="text-align: center; padding: 40px; color: #64748b;">
+            <i class="fas fa-calendar-alt" style="font-size: 3rem; margin-bottom: 15px;"></i>
+            <h4 id="select-class-prompt">Please select a class to view timetable</h4>
+        </div>
+        
+        <div id="classTimetable" style="display: none;">
+            <!-- Timetable will be dynamically generated here -->
+        </div>
+    </div>
+</div>
+
+<!-- Timetable Modal -->
+<div id="timetableModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px;">
+        <h3 id="modal-timetable-title">Add/Edit Time Slot</h3>
+        
+        <div class="form-group">
+            <label class="form-label" id="label-modal-class">Class</label>
+            <select id="modalClass" class="form-input" onchange="loadPeriodsForClass()">
+                <option value="">Select Class</option>
+                <option value="10A">Class 10-A</option>
+                <option value="10B">Class 10-B</option>
+                <option value="11A">Class 11-A</option>
+            </select>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" id="label-modal-day">Day</label>
+                <select id="modalDay" class="form-input">
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label" id="label-modal-period">Period</label>
+                <select id="modalPeriod" class="form-input">
+                    <option value="1">Period 1 (9:00-9:45)</option>
+                    <option value="2">Period 2 (9:45-10:30)</option>
+                    <option value="3">Period 3 (10:30-11:15)</option>
+                    <option value="4">Period 4 (11:15-12:00)</option>
+                    <option value="5">Period 5 (12:00-12:45)</option>
+                    <option value="6">Period 6 (12:45-1:30)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" id="label-modal-subject">Subject</label>
+            <select id="modalSubject" class="form-input">
+                <option value="">Select Subject</option>
+                <option value="MATH">Mathematics</option>
+                <option value="SCI">Science</option>
+                <option value="ENG">English</option>
+                <option value="HIST">History</option>
+                <option value="GEO">Geography</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" id="label-modal-teacher">Teacher</label>
+            <select id="modalTeacher" class="form-input">
+                <option value="">Select Teacher</option>
+                <option value="rajesh.kumar">Dr. Rajesh Kumar</option>
+                <option value="priya.sharma">Dr. Priya Sharma</option>
+                <option value="amit.singh">Prof. Amit Singh</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" id="label-modal-room">Room Number</label>
+            <input type="text" id="modalRoom" class="form-input" placeholder="Room number">
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" id="modalIsBreak" onchange="toggleBreakFields()">
+                <span id="label-is-break">This is a break period</span>
+            </label>
+        </div>
+        
+        <div id="breakFields" style="display: none;">
+            <div class="form-group">
+                <label class="form-label" id="label-break-desc">Break Description</label>
+                <input type="text" id="modalBreakDesc" class="form-input" placeholder="Lunch, Break, etc.">
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+            <button class="btn btn-secondary" onclick="closeTimetableModal()" id="btn-modal-cancel">Cancel</button>
+            <button class="btn btn-primary" onclick="saveTimetableSlot()" id="btn-modal-save">Save Time Slot</button>
+        </div>
+    </div>
+</div>
+            <!-- Teacher Management Section -->
+            <div id="teachers" class="content-section">
+                <div class="section-header">
+                    <h3 id="teachers-title">Teacher Management</h3>
+                    <button class="btn btn-primary" onclick="openTeacherModal()">
+                        <i class="fas fa-plus"></i> <span id="btn-add-teacher">Add New Teacher</span>
+                    </button>
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th id="th-teacher-id">Teacher ID</th>
+                            <th id="th-teacher-name">Name</th>
+                            <th id="th-teacher-subject">Subject</th>
+                            <th id="th-teacher-class">Class</th>
+                            <th id="th-teacher-actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>T001</td>
+                            <td>Dr. Rajesh Kumar</td>
+                            <td>Mathematics</td>
+                            <td>10-A, 10-B</td>
+                            <td class="action-btns">
+                                <button class="btn btn-primary btn-sm" id="btn-edit">Edit</button>
+                                <button class="btn btn-warning btn-sm" id="btn-assign">Assign</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>T002</td>
+                            <td>Dr. Priya Sharma</td>
+                            <td>Science</td>
+                            <td>10-A, 11-A</td>
+                            <td class="action-btns">
+                                <button class="btn btn-primary btn-sm" id="btn-edit">Edit</button>
+                                <button class="btn btn-warning btn-sm" id="btn-assign">Assign</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>T003</td>
+                            <td>Prof. Amit Singh</td>
+                            <td>English</td>
+                            <td>10-A</td>
+                            <td class="action-btns">
+                                <button class="btn btn-primary btn-sm" id="btn-edit">Edit</button>
+                                <button class="btn btn-warning btn-sm" id="btn-assign">Assign</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Student Admission Section -->
+            <div id="students" class="content-section">
+                <div class="section-header">
+                    <h3 id="students-title">Student Admission</h3>
+                    <button class="btn btn-primary" onclick="openStudentModal()">
+                        <i class="fas fa-plus"></i> <span id="btn-admit-student">Admit New Student</span>
+                    </button>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" id="label-student-name">Student Name</label>
+                        <input type="text" class="form-input" placeholder="Enter student name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" id="label-student-class">Class</label>
+                        <select class="form-input">
+                            <option value="">Select Class</option>
+                            <option value="10A">10-A</option>
+                            <option value="10B">10-B</option>
+                            <option value="11A">11-A</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" id="label-student-dob">Date of Birth</label>
+                        <input type="date" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" id="label-student-gender">Gender</label>
+                        <select class="form-input">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn btn-success">
+                    <i class="fas fa-save"></i> <span id="btn-save-student">Save Student Record</span>
+                </button>
+            </div>
+
+            <!-- Teacher Assignments Section -->
+            <div id="assignments" class="content-section">
+                <div class="section-header">
+                    <h3 id="assignments-title">Teacher Assignments</h3>
+                    <button class="btn btn-primary" onclick="openAssignmentModal()">
+                        <i class="fas fa-link"></i> <span id="btn-new-assignment">New Assignment</span>
+                    </button>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" id="label-assign-teacher">Select Teacher</label>
+                        <select class="form-input">
+                            <option value="">Select Teacher</option>
+                            <option value="T001">Dr. Rajesh Kumar (Mathematics)</option>
+                            <option value="T002">Dr. Priya Sharma (Science)</option>
+                            <option value="T003">Prof. Amit Singh (English)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" id="label-assign-class">Select Class</label>
+                        <select class="form-input">
+                            <option value="">Select Class</option>
+                            <option value="10A">10-A</option>
+                            <option value="10B">10-B</option>
+                            <option value="11A">11-A</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" id="label-assign-subject">Subject</label>
+                        <input type="text" class="form-input" placeholder="Enter subject">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" id="label-assign-periods">Periods per Week</label>
+                        <input type="number" class="form-input" placeholder="Number of periods">
+                    </div>
+                </div>
+                
+                <button class="btn btn-success">
+                    <i class="fas fa-save"></i> <span id="btn-save-assignment">Save Assignment</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="govt-footer">
+        <div class="container">
+            <div class="footer-content">
+                <p id="footer-text">© 2024 Government of Punjab, School Education Department. All rights reserved.</p>
+                <p>Smart Curriculum System v2.1 | Admin Dashboard</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Translation data
+        const translations = {
+            en: {
+                headerTitle: "Smart Curriculum System",
+                headerSubtitle: "Government of Punjab - School Education",
+                adminName: "Administrator",
+                adminRole: "System Administrator",
+                navOverview: "Dashboard Overview",
+                navTimetable: "Timetable Management",
+                navTeachers: "Teacher Management",
+                navStudents: "Student Admission",
+                navAssignments: "Teacher Assignments",
+                navLogout: "Logout",
+                dashboardTitle: "Admin Dashboard",
+                statStudents: "Total Students",
+                statTeachers: "Teaching Staff",
+                statClasses: "Active Classes",
+                statAttendance: "Average Attendance",
+                overviewTitle: "System Overview",
+                btnReport: "Generate Report",
+                overviewDesc: "Welcome to the Smart Curriculum System admin dashboard. Here you can manage all aspects of the educational system.",
+                quickActionsTitle: "Quick Actions",
+                btnNewTimetable: "Create New Timetable",
+                btnNewTeacher: "Add New Teacher",
+                btnNewStudent: "Admit New Student",
+                timetableTitle: "Timetable Management",
+                btnAddSlot: "Add Time Slot",
+                dayMon: "Monday",
+                dayTue: "Tuesday",
+                dayWed: "Wednesday",
+                dayThu: "Thursday",
+                dayFri: "Friday",
+                teachersTitle: "Teacher Management",
+                btnAddTeacher: "Add New Teacher",
+                thTeacherId: "Teacher ID",
+                thTeacherName: "Name",
+                thTeacherSubject: "Subject",
+                thTeacherClass: "Class",
+                thTeacherActions: "Actions",
+                btnEdit: "Edit",
+                btnAssign: "Assign",
+                studentsTitle: "Student Admission",
+                btnAdmitStudent: "Admit New Student",
+                labelStudentName: "Student Name",
+                labelStudentClass: "Class",
+                labelStudentDob: "Date of Birth",
+                labelStudentGender: "Gender",
+                btnSaveStudent: "Save Student Record",
+                assignmentsTitle: "Teacher Assignments",
+                btnNewAssignment: "New Assignment",
+                labelAssignTeacher: "Select Teacher",
+                labelAssignClass: "Select Class",
+                labelAssignSubject: "Subject",
+                labelAssignPeriods: "Periods per Week",
+                btnSaveAssignment: "Save Assignment",
+                footerText: "© 2024 Government of Punjab, School Education Department. All rights reserved."
+            },
+            pa: {
+                headerTitle: "ਸਮਾਰਟ ਪਾਠਕ੍ਰਮ ਸਿਸਟਮ",
+                headerSubtitle: "ਪੰਜਾਬ ਸਰਕਾਰ - ਸਕੂਲ ਸਿੱਖਿਆ",
+                adminName: "ਪ੍ਰਸ਼ਾਸਕ",
+                adminRole: "ਸਿਸਟਮ ਪ੍ਰਸ਼ਾਸਕ",
+                navOverview: "ਡੈਸ਼ਬੋਰਡ ਝਲਕ",
+                navTimetable: "ਸਮਾਂ ਸਾਰਣੀ ਪ੍ਰਬੰਧਨ",
+                navTeachers: "ਅਧਿਆਪਕ ਪ੍ਰਬੰਧਨ",
+                navStudents: "ਵਿਦਿਆਰਥੀ ਦਾਖਲਾ",
+                navAssignments: "ਅਧਿਆਪਕ ਨਿਯੁਕਤੀਆਂ",
+                navLogout: "ਲੌਗਆਉਟ",
+                dashboardTitle: "ਪ੍ਰਸ਼ਾਸਕ ਡੈਸ਼ਬੋਰਡ",
+                statStudents: "ਕੁਲ ਵਿਦਿਆਰਥੀ",
+                statTeachers: "ਅਧਿਆਪਨ ਸਟਾਫ",
+                statClasses: "ਸਰਗਰਮ ਕਲਾਸਾਂ",
+                statAttendance: "ਔਸਤ ਹਾਜ਼ਰੀ",
+                overviewTitle: "ਸਿਸਟਮ ਝਲਕ",
+                btnReport: "ਰਿਪੋਰਟ ਤਿਆਰ ਕਰੋ",
+                overviewDesc: "ਸਮਾਰਟ ਪਾਠਕ੍ਰਮ ਸਿਸਟਮ ਪ੍ਰਸ਼ਾਸਕ ਡੈਸ਼ਬੋਰਡ ਵਿੱਚ ਜੀ ਆਇਆਂ ਨੂੰ। ਇੱਥੇ ਤੁਸੀਂ ਸਿੱਖਿਆ ਪ੍ਰਣਾਲੀ ਦੇ ਸਾਰੇ ਪਹਿਲੂਆਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰ ਸਕਦੇ ਹੋ।",
+                quickActionsTitle: "ਤੁਰੰਤ ਕਾਰਵਾਈਆਂ",
+                btnNewTimetable: "ਨਵੀਂ ਸਮਾਂ ਸਾਰਣੀ ਬਣਾਓ",
+                btnNewTeacher: "ਨਵਾਂ ਅਧਿਆਪਕ ਸ਼ਾਮਲ ਕਰੋ",
+                btnNewStudent: "ਨਵਾਂ ਵਿਦਿਆਰਥੀ ਦਾਖਲ ਕਰੋ",
+                timetableTitle: "ਸਮਾਂ ਸਾਰਣੀ ਪ੍ਰਬੰਧਨ",
+                btnAddSlot: "ਸਮਾਂ ਸਲਾਟ ਸ਼ਾਮਲ ਕਰੋ",
+                dayMon: "ਸੋਮਵਾਰ",
+                dayTue: "ਮੰਗਲਵਾਰ",
+                dayWed: "ਬੁੱਧਵਾਰ",
+                dayThu: "ਵੀਰਵਾਰ",
+                dayFri: "ਸ਼ੁੱਕਰਵਾਰ",
+                teachersTitle: "ਅਧਿਆਪਕ ਪ੍ਰਬੰਧਨ",
+                btnAddTeacher: "ਨਵਾਂ ਅਧਿਆਪਕ ਸ਼ਾਮਲ ਕਰੋ",
+                thTeacherId: "ਅਧਿਆਪਕ ਆਈਡੀ",
+                thTeacherName: "ਨਾਮ",
+                thTeacherSubject: "ਵਿਸ਼ਾ",
+                thTeacherClass: "ਕਲਾਸ",
+                thTeacherActions: "ਕਾਰਵਾਈਆਂ",
+                btnEdit: "ਸੰਪਾਦਿਤ ਕਰੋ",
+                btnAssign: "ਨਿਯੁਕਤ ਕਰੋ",
+                studentsTitle: "ਵਿਦਿਆਰਥੀ ਦਾਖਲਾ",
+                btnAdmitStudent: "ਨਵਾਂ ਵਿਦਿਆਰਥੀ ਦਾਖਲ ਕਰੋ",
+                labelStudentName: "ਵਿਦਿਆਰਥੀ ਦਾ ਨਾਮ",
+                labelStudentClass: "ਕਲਾਸ",
+                labelStudentDob: "ਜਨਮ ਤਾਰੀਖ",
+                labelStudentGender: "ਲਿੰਗ",
+                btnSaveStudent: "ਵਿਦਿਆਰਥੀ ਰਿਕਾਰਡ ਸੰਭਾਲੋ",
+                assignmentsTitle: "ਅਧਿਆਪਕ ਨਿਯੁਕਤੀਆਂ",
+                btnNewAssignment: "ਨਵੀਂ ਨਿਯੁਕਤੀ",
+                labelAssignTeacher: "ਅਧਿਆਪਕ ਚੁਣੋ",
+                labelAssignClass: "ਕਲਾਸ ਚੁਣੋ",
+                labelAssignSubject: "ਵਿਸ਼ਾ",
+                labelAssignPeriods: "ਹਫ਼ਤੇ ਦੇ ਪੀਰੀਅਡ",
+                btnSaveAssignment: "ਨਿਯੁਕਤੀ ਸੰਭਾਲੋ",
+                footerText: "© 2024 ਪੰਜਾਬ ਸਰਕਾਰ, ਸਕੂਲ ਸਿੱਖਿਆ ਵਿਭਾਗ। ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ।"
+            },
+            hi: {
+                headerTitle: "स्मार्ट पाठ्यक्रम प्रणाली",
+                headerSubtitle: "पंजाब सरकार - स्कूल शिक्षा",
+                adminName: "प्रशासक",
+                adminRole: "सिस्टम प्रशासक",
+                navOverview: "डैशबोर्ड अवलोकन",
+                navTimetable: "समय सारणी प्रबंधन",
+                navTeachers: "शिक्षक प्रबंधन",
+                navStudents: "छात्र प्रवेश",
+                navAssignments: "शिक्षक नियुक्तियाँ",
+                navLogout: "लॉगआउट",
+                dashboardTitle: "प्रशासक डैशबोर्ड",
+                statStudents: "कुल छात्र",
+                statTeachers: "शिक्षण स्टाफ",
+                statClasses: "सक्रिय कक्षाएं",
+                statAttendance: "औसत उपस्थिति",
+                overviewTitle: "सिस्टम अवलोकन",
+                btnReport: "रिपोर्ट जनरेट करें",
+                overviewDesc: "स्मार्ट पाठ्यक्रम प्रणाली प्रशासक डैशबोर्ड में आपका स्वागत है। यहां आप शैक्षिक प्रणाली के सभी पहलुओं का प्रबंधन कर सकते हैं।",
+                quickActionsTitle: "त्वरित कार्य",
+                btnNewTimetable: "नई समय सारणी बनाएं",
+                btnNewTeacher: "नया शिक्षक जोड़ें",
+                btnNewStudent: "नया छात्र प्रवेशित करें",
+                timetableTitle: "समय सारणी प्रबंधन",
+                btnAddSlot: "टाइम स्लॉट जोड़ें",
+                dayMon: "सोमवार",
+                dayTue: "मंगलवार",
+                dayWed: "बुधवार",
+                dayThu: "गुरुवार",
+                dayFri: "शुक्रवार",
+                teachersTitle: "शिक्षक प्रबंधन",
+                btnAddTeacher: "नया शिक्षक जोड़ें",
+                thTeacherId: "शिक्षक आईडी",
+                thTeacherName: "नाम",
+                thTeacherSubject: "विषय",
+                thTeacherClass: "कक्षा",
+                thTeacherActions: "कार्रवाई",
+                btnEdit: "संपादित करें",
+                btnAssign: "नियुक्त करें",
+                studentsTitle: "छात्र प्रवेश",
+                btnAdmitStudent: "नया छात्र प्रवेशित करें",
+                labelStudentName: "छात्र का नाम",
+                labelStudentClass: "कक्षा",
+                labelStudentDob: "जन्म तिथि",
+                labelStudentGender: "लिंग",
+                btnSaveStudent: "छात्र रिकॉर्ड सहेजें",
+                assignmentsTitle: "शिक्षक नियुक्तियाँ",
+                btnNewAssignment: "नई नियुक्ति",
+                labelAssignTeacher: "शिक्षक चुनें",
+                labelAssignClass: "कक्षा चुनें",
+                labelAssignSubject: "विषय",
+                labelAssignPeriods: "साप्ताहिक अवधि",
+                btnSaveAssignment: "नियुक्ति सहेजें",
+                footerText: "© 2024 पंजाब सरकार, स्कूल शिक्षा विभाग। सर्वाधिकार सुरक्षित।"
+            }
+        };
+
+        // Current language
+        let currentLanguage = 'en';
+
+        // Change language function
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active button
+            document.querySelectorAll('.translation-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Apply translations
+            applyTranslations();
+        }
+
+        // Apply translations to the page
+        function applyTranslations() {
+            const translation = translations[currentLanguage];
+            
+            // Update all elements with translations
+            for (const key in translation) {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = translation[key];
+                }
+            }
+        }
+
+        // Show section function
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Find and activate the corresponding nav item
+            const navItems = document.querySelectorAll('.nav-item');
+            for (let i = 0; i < navItems.length; i++) {
+                if (navItems[i].getAttribute('onclick')?.includes(sectionId)) {
+                    navItems[i].classList.add('active');
+                    break;
+                }
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                window.location.href = "index.html";
+            }
+        }
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-IN', options);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            applyTranslations();
+            updateCurrentDate();
+            
+            // Add sample timetable data
+            addSampleTimetableData();
+        });
+
+        // Add sample timetable data
+        function addSampleTimetableData() {
+            const timetableData = {
+                'mon-1': 'Mathematics - 10A (Dr. Rajesh)',
+                'mon-2': 'Science - 10A (Dr. Priya)',
+                'tue-1': 'English - 10A (Prof. Amit)',
+                'wed-1': 'Mathematics - 10B (Dr. Rajesh)',
+                'thu-3': 'Computer Science - 11A (Dr. Priya)'
+            };
+            
+            for (const cellId in timetableData) {
+                const cell = document.getElementById(cellId);
+                if (cell) {
+                    cell.innerHTML = `<div class="timetable-slot">${timetableData[cellId]}</div>`;
+                }
+            }
+        }
+
+        // Placeholder functions for modal actions
+        function openTimetableModal() {
+            alert("Add Time Slot functionality would open here");
+        }
+
+        function openTeacherModal() {
+            alert("Add New Teacher functionality would open here");
+        }
+
+        function openStudentModal() {
+            alert("Admit New Student functionality would open here");
+        }
+
+        function openAssignmentModal() {
+            alert("New Assignment functionality would open here");
+        }
+
+        function generateReport() {
+            alert("Report generation functionality would execute here");
+        }
+        function logout() {
+    const message = currentLanguage === 'en' ? 'Logging out...' :
+                    currentLanguage === 'pa' ? 'ਲਾਗ ਆਊਟ ਹੋ ਰਿਹਾ ਹੈ...' :
+                    'लॉग आउट हो रहा है...';
+    alert(message);
+    // Redirect to teacher login page in the same folder
+    window.location.href = 'admin-login.html';
+}
+    </script>
+</body>
+</html>
