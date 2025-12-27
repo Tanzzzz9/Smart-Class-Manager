@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Login - Smart Curriculum System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --dark-blue: #1e40af;
+            --light-blue: #dbeafe;
+            --govt-gold: #d97706;
+            --white: #ffffff;
+            --gray-light: #f8fafc;
+            --gray-border: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --error-red: #ef4444;
+            --success-green: #10b981;
+            --captcha-bg: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.4;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
+        .govt-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        /* Back Button */
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid var(--gray-border);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--light-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: var(--primary-blue);
+            font-size: 2rem;
+            border: 3px solid var(--primary-blue);
+        }
+
+        .login-header h2 {
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid var(--gray-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--gray-light);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* CAPTCHA Styles */
+        .captcha-container {
+            background: var(--captcha-bg);
+            border: 2px solid var(--gray-border);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .captcha-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .captcha-header h4 {
+            color: var(--primary-blue);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .refresh-captcha {
+            background: none;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .refresh-captcha:hover {
+            color: var(--dark-blue);
+        }
+
+        .captcha-display {
+            background: linear-gradient(45deg, #1e293b, #374151);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            user-select: none;
+            border: 1px solid #475569;
+        }
+
+        .captcha-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .captcha-input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--gray-border);
+            border-radius: 5px;
+            font-size: 1rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        .captcha-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: var(--dark-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.3);
+        }
+
+        .login-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .login-btn i {
+            margin-right: 8px;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: var(--error-red);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .error-message i {
+            margin-right: 8px;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Security Info */
+        .security-info {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f9ff;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            color: #0369a1;
+        }
+
+        /* Footer */
+        .govt-footer {
+            background: var(--primary-blue);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            font-size: 0.85rem;
+        }
+
+        .footer-content p {
+            margin-bottom: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .login-container {
+                margin: 20px;
+                padding: 30px 25px;
+            }
+            
+            .captcha-input-group {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 25px 20px;
+            }
+            
+            .login-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .captcha-display {
+                font-size: 1.2rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Government Header -->
+    <header class="govt-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Smart Curriculum System</h1>
+                        <p>Government of Punjab - School Education</p>
+                    </div>
+                </div>
+                <a href="index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="login-container">
+                <div class="login-header">
+                    <div class="login-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h2>Teacher Login</h2>
+                    <p>Access to curriculum and attendance management</p>
+                </div>
+
+                <!-- Error Message -->
+                <div class="error-message" id="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="error-text">Invalid credentials or CAPTCHA verification failed</span>
+                </div>
+
+                <!-- Login Form -->
+                <form id="teacherLoginForm">
+                    <div class="form-group">
+                        <label for="teacherId">Teacher ID</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-id-card"></i>
+                            <input type="text" id="teacherId" name="teacherId" class="form-control" placeholder="Enter your teacher ID" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CAPTCHA Section -->
+                    <div class="captcha-container">
+                        <div class="captcha-header">
+                            <h4>Security Verification</h4>
+                            <button type="button" class="refresh-captcha" onclick="generateCaptcha()">
+                                <i class="fas fa-redo-alt"></i> Refresh
+                            </button>
+                        </div>
+                        
+                        <div class="captcha-display" id="captchaText">
+                            Loading CAPTCHA...
+                        </div>
+                        
+                        <div class="captcha-input-group">
+                            <input type="text" id="captchaInput" class="captcha-input" placeholder="Enter the code above" required maxlength="6">
+                            <button type="button" class="refresh-captcha" onclick="generateCaptcha()" title="Refresh CAPTCHA">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Login to Teacher Portal
+                    </button>
+                </form>
+
+                <div class="security-info">
+                    <i class="fas fa-shield-alt"></i> Protected by textual CAPTCHA security system
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="govt-footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2026 Government of Punjab, School Education Department. All rights reserved.</p>
+                <p>Smart Curriculum System v2.1 | Secure SSL Connection</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // CAPTCHA variables
+        let currentCaptcha = '';
+        let captchaAttempts = 0;
+        const maxCaptchaAttempts = 3;
+
+        // DOM Elements
+        const loginForm = document.getElementById('teacherLoginForm');
+        const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        const loginBtn = document.getElementById('loginBtn');
+        const passwordToggle = document.querySelector('.password-toggle');
+        const passwordInput = document.getElementById('password');
+        const captchaText = document.getElementById('captchaText');
+        const captchaInput = document.getElementById('captchaInput');
+
+        // Character sets for CAPTCHA generation
+        const captchaChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Removed similar characters like I,1,O,0
+        const captchaLength = 6;
+
+        // Generate random CAPTCHA text
+        function generateCaptcha() {
+            let captcha = '';
+            for (let i = 0; i < captchaLength; i++) {
+                captcha += captchaChars.charAt(Math.floor(Math.random() * captchaChars.length));
+            }
+            currentCaptcha = captcha;
+            
+            // Apply visual distortion effects
+            displayCaptcha(captcha);
+            
+            // Clear input field
+            captchaInput.value = '';
+            captchaInput.focus();
+            
+            return captcha;
+        }
+
+        // Display CAPTCHA with visual effects
+        function displayCaptcha(text) {
+            let html = '';
+            for (let i = 0; i < text.length; i++) {
+                // Random rotation and color for each character
+                const rotation = Math.floor(Math.random() * 30) - 15;
+                const colorVariation = Math.floor(Math.random() * 50) - 25;
+                html += `<span style="
+                    display: inline-block;
+                    transform: rotate(${rotation}deg);
+                    color: rgb(${255 + colorVariation}, ${255 + colorVariation}, ${255 + colorVariation});
+                    margin: 0 2px;
+                ">${text.charAt(i)}</span>`;
+            }
+            captchaText.innerHTML = html;
+        }
+
+        // Validate CAPTCHA
+        function validateCaptcha() {
+            const userInput = captchaInput.value.toUpperCase().replace(/\s/g, '');
+            
+            if (userInput === '') {
+                showError('Please enter the CAPTCHA code');
+                return false;
+            }
+            
+            if (userInput !== currentCaptcha) {
+                captchaAttempts++;
+                showError(`Invalid CAPTCHA code. Attempts remaining: ${maxCaptchaAttempts - captchaAttempts}`);
+                
+                if (captchaAttempts >= maxCaptchaAttempts) {
+                    disableLoginTemporarily();
+                    return false;
+                }
+                
+                generateCaptcha(); // Generate new CAPTCHA on failure
+                return false;
+            }
+            
+            // CAPTCHA validated successfully
+            captchaAttempts = 0;
+            return true;
+        }
+
+        // Disable login temporarily after too many failed attempts
+        function disableLoginTemporarily() {
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-clock"></i> Login disabled (30 seconds)';
+            
+            let seconds = 30;
+            const countdown = setInterval(() => {
+                seconds--;
+                loginBtn.innerHTML = `<i class="fas fa-clock"></i> Login disabled (${seconds} seconds)`;
+                
+                if (seconds <= 0) {
+                    clearInterval(countdown);
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login to Teacher Portal';
+                    captchaAttempts = 0;
+                    generateCaptcha();
+                    hideError();
+                }
+            }, 1000);
+        }
+
+        // Toggle password visibility
+        function togglePassword() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        }
+
+        // Show error message
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.add('active');
+            
+            // Auto-hide error after 5 seconds
+            setTimeout(hideError, 5000);
+        }
+
+        // Hide error message
+        function hideError() {
+            errorMessage.classList.remove('active');
+        }
+
+        // Show loading state
+        function setLoading(isLoading) {
+            if (isLoading) {
+                loginBtn.innerHTML = '<span class="spinner"></span> Authenticating...';
+                loginBtn.disabled = true;
+            } else {
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login to Teacher Portal';
+                loginBtn.disabled = false;
+            }
+        }
+
+        // Handle form submission
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Hide previous errors
+            hideError();
+            
+            // Validate CAPTCHA
+            if (!validateCaptcha()) {
+                return;
+            }
+
+            // Get form data
+            const formData = new FormData(loginForm);
+            const teacherId = formData.get('teacherId');
+            const password = formData.get('password');
+
+            // Show loading state
+            setLoading(true);
+
+            try {
+                // Simulate API call (replace with actual backend call)
+                const loginSuccessful = await simulateLogin(teacherId, password);
+                
+                if (loginSuccessful) {
+                    // Login successful
+                    loginBtn.innerHTML = '<i class="fas fa-check"></i> Login Successful!';
+                    
+                    // Store login state
+                    localStorage.setItem('teacherLoggedIn', 'true');
+                    localStorage.setItem('teacherId', teacherId);
+                    localStorage.setItem('loginTime', new Date().toISOString());
+                    
+                    setTimeout(() => {
+                        window.location.href = 'teacher-dashboard.html';
+                    }, 1000);
+                } else {
+                    // Login failed
+                    showError('Invalid teacher ID or password');
+                    generateCaptcha(); // Generate new CAPTCHA on login failure
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Login error. Please try again.');
+                generateCaptcha();
+                setLoading(false);
+            }
+        });
+
+        // Simulate login (replace with actual backend API call)
+        async function simulateLogin(teacherId, password) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // Demo credentials
+                    const validCredentials = (
+                        teacherId === 'teacher' && 
+                        password === 'teacher123'
+                    );
+                    resolve(validCredentials);
+                }, 1500);
+            });
+        }
+
+        // Auto-focus teacher ID field and generate initial CAPTCHA
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('teacherId').focus();
+            generateCaptcha();
+            
+            // Fill demo credentials for testing (remove in production)
+            fillDemoCredentials();
+        });
+
+        // Demo credentials for testing
+        function fillDemoCredentials() {
+            document.getElementById('teacherId').value = 'teacher';
+            document.getElementById('password').value = 'teacher123';
+        }
+
+        // Allow Enter key to submit form from CAPTCHA field
+        captchaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                loginForm.dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // Add some visual feedback for CAPTCHA input
+        captchaInput.addEventListener('input', function() {
+            if (this.value.length === captchaLength) {
+                this.style.borderColor = '#10b981';
+            } else {
+                this.style.borderColor = '#e2e8f0';
+            }
+        });
+    </script>
+</body>
+</html>
